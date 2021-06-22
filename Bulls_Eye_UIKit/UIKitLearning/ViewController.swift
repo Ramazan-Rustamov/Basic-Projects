@@ -58,7 +58,7 @@ class ViewController: UIViewController {
         let action = UIAlertAction(
             title: "OK",
             style: .default,
-            // It's very importand to give the handler some function , as nothing will happen with nil value
+            // It's very important to give the handler some function , as nothing will happen with nil value
             handler:{ _ in
                 self.startNewRound()
             })
@@ -79,7 +79,7 @@ class ViewController: UIViewController {
     func startNewRound () {
         // We make stage +=1 , as in startNewGame func we give the stage variable 0 value , no game starts at 0 round
         stage += 1
-        // Int.random method allows us to give a specific range of numbers ans Swift randomly chooses one of them
+        // Int.random method allows us to give a specific range of numbers and Xcode randomly chooses one of them
         targetValue = Int.random(in: 1...100)
         // Current Value represents the value on the slider at the beginning of each round
         currentValue = 50
