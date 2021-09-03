@@ -1,0 +1,32 @@
+[
+{
+   "id": 1,
+   "day": "Matchday 1",
+   "clubs": [
+        "Chelsea" , "Bayer Leverkusen"
+   ]
+},
+{
+    "id": 2,
+    "day": "Matchday 2",
+    "clubs": [
+         "Real Madrid", "Atletico Madrid"
+    ],
+    "details": "Madrid derby"
+    },
+{
+    "id": 3,
+    "day": "Matchday 3",
+    "clubs": [
+         "Milan" , "Borrussia Monchengladbach"
+    ]
+},
+{
+    "id": 4,
+    "day": "Matchday 4",
+    "clubs": [
+         "Bayern Munich","Borrussia Dortmund"
+    ],
+    "details": "Der Klassiker"
+    }
+]

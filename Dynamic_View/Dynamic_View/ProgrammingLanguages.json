@@ -1,0 +1,34 @@
+   [
+   {
+   "id": 1,
+   "name": "Swift",
+   "details": "Swift is a programming language mostly used for creating apps for Apple devices.",
+   "frameworks": [
+    "SwiftUI", "UIKit"
+   ]
+   },
+   {
+       "id": 2,
+       "name": "Kotlin",
+       "details": "Kotlin is a programming language mostly used for creating apps for Android.",
+       "frameworks": [
+        "Jetpack Compose", "JavaFX" , "TornadoFX"
+       ]
+   },
+   {
+       "id": 3,
+       "name": "Java",
+       "details": "Java is a programming language for general-purposes.",
+       "frameworks": [
+        "Spring Boot", "Hibernate" , "JSF"
+       ]
+   },
+   {
+       "id": 4,
+       "name": "Python",
+       "details": "Python is a programming language for general-purposes.",
+       "frameworks": [
+        "Django", "Web2py" , "TurboGears"
+       ]
+   }
+   ]

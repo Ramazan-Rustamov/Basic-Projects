@@ -1,8 +1,8 @@
 //
 //  AppDelegate.swift
-//  Dynamic_View
+//  StackViewPractice
 //
-//  Created by BR on 30.08.21.
+//  Created by Nasraddin Rustamov on 9/1/21.
 //
 
 import UIKit
