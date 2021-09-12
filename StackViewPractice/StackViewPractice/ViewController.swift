@@ -10,53 +10,46 @@ import UIKit
 class ViewController: UIViewController {
     
     var footballClubs = Bundle.main.decode([FootballClubs].self, from: "FootballClubs.json")
-    let mainStackView = UIStackView()
-    let clubLogosStackView = UIStackView()
-    let matchdayStackView = UIStackView()
+    let tableView = UITableView()
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
-        configureStackView()
+        view.backgroundColor = .white
+        configureTableView()
     }
-    
-    func configureStackView() {
-        view.addSubview(mainStackView)
-        mainStackView.axis = .vertical
-        mainStackView.distribution = .fillEqually
-        mainStackView.spacing = 40
-        
-        for index in 0...footballClubs.count-1 {
-            let button = UIButton()
-                button.setTitleColor(.white, for: .normal)
-                button.backgroundColor = .red
-                button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-                button.layer.cornerRadius = 10
-            button.addAction(for: .touchUpInside){
-            }
-            button.setTitle("\(footballClubs[index].day ?? "N/A")" , for: .normal)
-            
-            let firstClub = UIImageView(image: UIImage(named: footballClubs[index].clubs![0]))
-            let secondClub = UIImageView(image: UIImage(named: footballClubs[index].clubs![1]))
-            let matchDetails = UILabel()
-            matchDetails.text = footballClubs[index].details
-            matchDetails.textColor = .white
-            matchDetails.font = UIFont.boldSystemFont(ofSize: 20)
-            mainStackView.addArrangedSubview(button)
-            mainStackView.addArrangedSubview(firstClub)
-            mainStackView.addArrangedSubview(secondClub)
-            mainStackView.addArrangedSubview(matchDetails)
-
-        }
-        mainStackView.translatesAutoresizingMaskIntoConstraints = false
+    func configureTableView() {
+        view.addSubview (tableView)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(TableViewCell.self, forCellReuseIdentifier: "Football")
+        tableView.rowHeight = 120
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            mainStackView.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
-            mainStackView.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor, constant: 20),
-            mainStackView.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor, constant: -20),
-            mainStackView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -20)
-
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
-
+    }
+extension ViewController : UITableViewDataSource, UITableViewDelegate{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        footballClubs.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Football", for: indexPath) as! TableViewCell
+        cell.setImages(image1: (footballClubs[indexPath.row].clubs![0]), image2: footballClubs[indexPath.row].clubs![1])
+        cell.setTitles(buttonTitle: footballClubs[indexPath.row].day!, labelTitle: footballClubs[indexPath.row].details ?? "")
+        return cell
+    }
+     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+                tableView.deselectRow(at: indexPath, animated: true)
+    }
+}
+extension UIControl {
+    func addAction(for controlEvents: UIControl.Event = .touchUpInside, _ closure: @escaping()->()) {
+        addAction(UIAction { (action: UIAction) in closure() }, for: controlEvents)
+    }
 }
 extension UIControl {
     func addAction(for controlEvents: UIControl.Event = .touchUpInside, _ closure: @escaping()->()) {
