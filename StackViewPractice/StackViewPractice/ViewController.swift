@@ -8,51 +8,85 @@
 import UIKit
 
 class ViewController: UIViewController {
+    let scrollView = UIScrollView()
+    let stackView = UIStackView()
+    let apiCall = ApiCall()
+    var myView = [MyView]()
     
-    var footballClubs = Bundle.main.decode([FootballClubs].self, from: "FootballClubs.json")
-    let tableView = UITableView()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        configureTableView()
+        scrollView.backgroundColor = .black
+        apiCall.performRequest(completionHandler: { data in
+                self.myView = data
+            self.configureView()
+            })
+        configureScrollView()
+        configureStackView()
     }
-    func configureTableView() {
-        view.addSubview (tableView)
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(TableViewCell.self, forCellReuseIdentifier: "Football")
-        tableView.rowHeight = 120
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+   
+    fileprivate func configureScrollView() {
+        view.addSubview(scrollView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
-    }
-extension ViewController : UITableViewDataSource, UITableViewDelegate{
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        footballClubs.count
+    
+    fileprivate func configureView() {
+        for index in 0..<(myView.count){
+            let button = UIButton()
+            let textView = UITextView()
+            let imageView = UIImageView()
+            
+            textView.text = myView[index].text
+            textView.font = UIFont.boldSystemFont(ofSize: 20)
+            textView.heightAnchor.constraint(equalToConstant: 60).isActive = true
+            textView.backgroundColor = .white
+            textView.textColor = .black
+            
+            button.backgroundColor = .red
+            button.setTitle(myView[index].button, for: .normal)
+            button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 15)
+            button.layer.cornerRadius = 10
+            button.heightAnchor.constraint(equalToConstant: 60).isActive = true
+            
+            //imageView.downloaded(from: myView[index].image ?? "")
+            imageView.downloaded(from: "https://via.placeholder.com/600/b0f7cc")
+            
+            if myView[index].button != nil {
+                stackView.addArrangedSubview(button)
+            }
+            
+            if myView[index].text != nil {
+                stackView.addArrangedSubview(textView)
+            }
+            if myView[index].image != nil {
+                if myView[index].image != "" {
+                    stackView.addArrangedSubview(imageView)
+                }
+            }
+        }
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Football", for: indexPath) as! TableViewCell
-        cell.setImages(image1: (footballClubs[indexPath.row].clubs![0]), image2: footballClubs[indexPath.row].clubs![1])
-        cell.setTitles(buttonTitle: footballClubs[indexPath.row].day!, labelTitle: footballClubs[indexPath.row].details ?? "")
-        return cell
+    fileprivate func configureStackView() {
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(stackView)
+        stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
+        stackView.alignment = .fill
+        stackView.spacing = 20
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ])
+        
     }
-     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-                tableView.deselectRow(at: indexPath, animated: true)
-    }
-}
-extension UIControl {
-    func addAction(for controlEvents: UIControl.Event = .touchUpInside, _ closure: @escaping()->()) {
-        addAction(UIAction { (action: UIAction) in closure() }, for: controlEvents)
-    }
-}
-extension UIControl {
-    func addAction(for controlEvents: UIControl.Event = .touchUpInside, _ closure: @escaping()->()) {
-        addAction(UIAction { (action: UIAction) in closure() }, for: controlEvents)
-    }
+
 }
