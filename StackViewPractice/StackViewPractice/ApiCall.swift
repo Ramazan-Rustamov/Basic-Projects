@@ -6,12 +6,35 @@
 //
 
 import Foundation
+import UIKit
 
-struct FootballClubs: Decodable, Identifiable {
-    var id: Int?
-    var day: String?
-    var clubs: [String]?
-    var details: String?
+struct MyView: Codable{
+    var button : String?
+    var text : String?
+    var image : String?
+}
+
+
+public class ApiCall {
+    
+        let url = "https://ramazan.free.beeceptor.com"
+    
+    func performRequest(completionHandler: @escaping ([MyView]) -> Void) {
+        
+        guard let viewUrl = URL(string: url) else { return }
+        
+        URLSession.shared.dataTask(with: viewUrl) { (data, response, error) in
+            guard let data = data else { return }
+            
+            do {
+                let myView = try? JSONDecoder().decode([MyView].self,from: data)
+                DispatchQueue.main.async {
+                    completionHandler(myView!)
+                }
+        }
+        }
+        .resume()
+}
 }
 
 extension Bundle {
@@ -41,5 +64,25 @@ extension Bundle {
         } catch {
             fatalError("Failed to decode \(file) from bundle: \(error.localizedDescription)")
         }
+    }
+}
+extension UIImageView {
+    func downloaded(from url: URL, contentMode mode: ContentMode = .scaleAspectFit) {
+        contentMode = mode
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            guard
+                let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,
+                let mimeType = response?.mimeType, mimeType.hasPrefix("image"),
+                let data = data, error == nil,
+                let image = UIImage(data: data)
+                else { return }
+            DispatchQueue.main.async() { [weak self] in
+                self?.image = image
+            }
+        }.resume()
+    }
+    func downloaded(from link: String, contentMode mode: ContentMode = .scaleAspectFit) {
+        guard let url = URL(string: link) else { return }
+        downloaded(from: url, contentMode: mode)
     }
 }
